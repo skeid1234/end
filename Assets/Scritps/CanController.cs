@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,8 +22,8 @@ public class CanController : MonoBehaviour
 
     public bool IsMoving { get; private set; }
 
-    private void Start()
-    {
+    void Start()
+    {       
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -34,14 +35,20 @@ public class CanController : MonoBehaviour
             switch (MoveType)
             {
                 case MoveType.TransformTranslate:
+                    transform.Translate(GetLerp());
                     break;
                 case MoveType.RigidbodyVelocity:
-                    _rigidbody.velocity = _direction.normalized * Speed;
+                    _rigidbody.velocity = _direction.normalized * (Speed + 0.2f);
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    private Vector3 GetLerp()
+    {
+        return _direction * Speed * Time.deltaTime; 
     }
 
     public void StartMove(Vector3 directon, Collider deadCollider, TrackableEventHandler target)
